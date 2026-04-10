@@ -17,6 +17,7 @@
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
 @keyframes lineGrow{from{width:0}to{width:100%}}
 @keyframes dotPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:0.7}}
+@keyframes robinPulse{0%,100%{filter:drop-shadow(0 0 4px rgba(232,244,255,0.25)) drop-shadow(0 0 8px rgba(0,180,255,0.15))}50%{filter:drop-shadow(0 0 10px rgba(232,244,255,0.55)) drop-shadow(0 0 20px rgba(0,180,255,0.35))}}
 
 .a1{animation:fadeUp 0.5s ease both}
 .a2{animation:fadeUp 0.5s 0.15s ease both}
@@ -201,7 +202,7 @@ body{background:#0f0f1a;margin:0;padding:0;display:flex;flex-direction:column;}
 .roi-lbl{font-size:clamp(11px,1.1vw,15px);color:#374151;font-weight:500;margin-top:6px;}
 
 .closing-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,112,210,0.05) 0%,transparent 70%);pointer-events:none;}
-.robin-svg{width:88px;height:88px;margin-bottom:20px;}
+.robin-svg{width:96px;height:96px;margin-bottom:20px;animation:robinPulse 3s 1s ease-in-out infinite;}
 .closing-h{font-size:clamp(48px,6.5vw,88px);font-weight:800;color:#0f0f1a;letter-spacing:-0.03em;line-height:1.15;text-align:center;}
 .closing-h .bl{color:#0070d2;}
 .closing-sub{font-size:clamp(18px,2vw,26px);color:#6b7280;text-align:center;margin-top:10px;}
@@ -255,38 +256,42 @@ body{background:#0f0f1a;margin:0;padding:0;display:flex;flex-direction:column;}
   <div class="slide on" id="s0">
     <div class="corner"></div><div class="corner2"></div>
     <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;flex:1;">
-      <svg class="robin-svg" style="margin-bottom:16px;" viewBox="0 0 100 100" fill="none">
+      <svg class="robin-svg" style="margin-bottom:16px;" viewBox="0 0 120 120" fill="none">
         <defs>
-          <filter id="neon" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="2.5" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          <filter id="wg" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
-          <filter id="neonStrong" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="3.5" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          <filter id="bg" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
         </defs>
-        <!-- dark background circle -->
-        <circle cx="50" cy="50" r="47" fill="#0b0b18"/>
-        <!-- glowing outer ring -->
-        <circle cx="50" cy="50" r="47" stroke="#7ecfff" stroke-width="2.5" filter="url(#neon)" class="a1"/>
-        <!-- head silhouette -->
-        <path d="M35 35 Q35 15 50 13 Q65 15 65 35 Q65 49 50 51 Q35 49 35 35Z" fill="#0b0b18" stroke="#c5e8ff" stroke-width="1.5" filter="url(#neon)" class="a2"/>
-        <!-- swept hair spike -->
-        <path d="M54 14 Q63 2 65 12 Q61 6 58 14" fill="#0b0b18" stroke="#c5e8ff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" filter="url(#neon)" class="a2"/>
-        <!-- glowing eye slits (angular diamond shapes) -->
-        <path d="M33 33 L39 26 L45 32 L39 37Z" fill="#a8dcff" filter="url(#neonStrong)" class="a2"/>
-        <path d="M55 32 L61 26 L67 33 L61 37Z" fill="#a8dcff" filter="url(#neonStrong)" class="a2"/>
-        <!-- body and shoulders -->
-        <path d="M38 51 L29 56 Q18 62 16 84 L84 84 Q82 62 71 56 L62 51" fill="#0b0b18" stroke="#c5e8ff" stroke-width="1.5" filter="url(#neon)" class="a3"/>
-        <!-- V collar -->
-        <path d="M38 51 L50 65 L62 51" fill="#0b0b18" stroke="#c5e8ff" stroke-width="1.8" stroke-linejoin="round" filter="url(#neon)" class="a3"/>
-        <!-- ≡ three lines -->
-        <line x1="36" y1="72" x2="44" y2="72" stroke="#a8dcff" stroke-width="2" stroke-linecap="round" filter="url(#neon)" class="a4"/>
-        <line x1="36" y1="76" x2="44" y2="76" stroke="#a8dcff" stroke-width="2" stroke-linecap="round" filter="url(#neon)" class="a4"/>
-        <line x1="36" y1="80" x2="44" y2="80" stroke="#a8dcff" stroke-width="2" stroke-linecap="round" filter="url(#neon)" class="a4"/>
-        <!-- R -->
-        <path d="M47 69.5 L47 81.5 M47 69.5 L52 69.5 Q55.5 69.5 55.5 73.5 Q55.5 77 52 77 L47 77 M52 77 L56 81.5" stroke="#a8dcff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon)" class="a4"/>
+        <!-- dark background -->
+        <circle cx="60" cy="60" r="58" fill="#08080f"/>
+        <!-- outer ring — white glow -->
+        <circle cx="60" cy="60" r="56" stroke="#e8f4ff" stroke-width="2" filter="url(#wg)" class="a1"/>
+        <!-- head -->
+        <ellipse cx="60" cy="34" rx="13" ry="16" stroke="#e8f4ff" stroke-width="1.6" filter="url(#wg)" class="a2"/>
+        <!-- swept hair strokes -->
+        <path d="M48,24 Q42,10 52,19" stroke="#e8f4ff" stroke-width="2.2" stroke-linecap="round" filter="url(#wg)" class="a2"/>
+        <path d="M53,19 Q51,9 58,16" stroke="#e8f4ff" stroke-width="1.6" stroke-linecap="round" filter="url(#wg)" class="a2"/>
+        <!-- glowing blue eyes — angular diamond slits -->
+        <path d="M49,35 L54,29 L59,35 L54,41Z" fill="#00b4ff" filter="url(#bg)" class="a2"/>
+        <path d="M61,35 L66,29 L71,35 L66,41Z" fill="#00b4ff" filter="url(#bg)" class="a2"/>
+        <!-- neck -->
+        <line x1="54" y1="50" x2="52" y2="57" stroke="#e8f4ff" stroke-width="1.5" stroke-linecap="round" filter="url(#wg)" class="a3"/>
+        <line x1="66" y1="50" x2="68" y2="57" stroke="#e8f4ff" stroke-width="1.5" stroke-linecap="round" filter="url(#wg)" class="a3"/>
+        <!-- shoulders and body -->
+        <path d="M52,57 L42,62 Q28,70 24,92 L96,92 Q92,70 78,62 L68,57" stroke="#e8f4ff" stroke-width="1.5" filter="url(#wg)" class="a3"/>
+        <!-- V collar — white -->
+        <path d="M52,57 L60,70 L68,57" stroke="#e8f4ff" stroke-width="2" stroke-linejoin="round" filter="url(#wg)" class="a3"/>
+        <!-- ≡ lines — electric blue -->
+        <line x1="44" y1="76" x2="53" y2="76" stroke="#00b4ff" stroke-width="2" stroke-linecap="round" filter="url(#bg)" class="a4"/>
+        <line x1="44" y1="80" x2="53" y2="80" stroke="#00b4ff" stroke-width="2" stroke-linecap="round" filter="url(#bg)" class="a4"/>
+        <line x1="44" y1="84" x2="53" y2="84" stroke="#00b4ff" stroke-width="2" stroke-linecap="round" filter="url(#bg)" class="a4"/>
+        <!-- R — electric blue -->
+        <path d="M56,73 L56,86 M56,73 L62,73 Q66,73 66,77.5 Q66,82 62,82 L56,82 M62,82 L66.5,86" stroke="#00b4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#bg)" class="a4"/>
       </svg>
       <div class="h1 a1">Robin <span class="bl">by Salesforce</span></div>
       <div class="sub a2" style="text-align:center;max-width:560px;">Stop switching tabs — Robin already knows</div>
