@@ -60,6 +60,21 @@ body{background:#0f0f1a;margin:0;padding:0;display:flex;flex-direction:column;}
 .nb:hover{background:#f9fafb;border-color:#d1d5db;}
 .nb.pr{background:#0070d2;border-color:#0070d2;color:#fff;}
 .nb.pr:hover{background:#005fb2;}
+.nb.fs-btn{padding:5px 8px;color:#6b7280;}
+.nb.fs-btn:hover{color:#0070d2;}
+
+/* Fullscreen state — hides nav, expands slide to full viewport */
+.deck.fullscreen{position:fixed;inset:0;z-index:9999;height:100vh;width:100vw;border-radius:0;}
+.deck.fullscreen .nav{display:none;}
+.deck.fullscreen .slide.on{flex:1;}
+
+/* Exit button shown only in fullscreen */
+.exit-fs{display:none;position:fixed;top:16px;right:16px;z-index:10000;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,0.2);background:rgba(0,0,0,0.45);color:#fff;font-family:'Inter',sans-serif;backdrop-filter:blur(6px);transition:opacity 0.2s;}
+.exit-fs:hover{background:rgba(0,0,0,0.65);}
+.deck.fullscreen ~ .exit-fs{display:block;}
+
+/* Smooth transition in/out */
+.deck{transition:border-radius 0.25s ease;}
 
 .slide{display:none;background:#fff;flex:1;flex-direction:column;position:relative;overflow-y:auto;align-items:center;justify-content:center;}
 .slide.on{display:flex;}
@@ -220,13 +235,19 @@ body{background:#0f0f1a;margin:0;padding:0;display:flex;flex-direction:column;}
 </head>
 <body>
 
-<div class="deck">
+<button class="exit-fs" id="exitFsBtn" onclick="toggleFS()">&#x2715; Exit Fullscreen</button>
+<div class="deck" id="deck">
   <div class="nav">
     <span class="nav-title">Robin by Salesforce</span>
     <span class="slide-num" id="sc">01 / 14</span>
     <div class="dot-row" id="drow"></div>
     <button class="nb" onclick="prev()">&#8592;</button>
     <button class="nb pr" onclick="next()">&#8594;</button>
+    <button class="nb fs-btn" id="fsBtn" onclick="toggleFS()" title="Fullscreen">
+      <svg id="fsIcon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+      </svg>
+    </button>
   </div>
 
   <div class="slide on" id="s0">
@@ -625,12 +646,42 @@ function go(n) {
 function next() { if (cur < tot - 1) go(cur + 1); }
 function prev() { if (cur > 0) go(cur - 1); }
 
+buildDots();
+
+// Fullscreen toggle — uses native Fullscreen API with CSS-class fallback
+var deck = document.getElementById('deck');
+var fsIcon = document.getElementById('fsIcon');
+
+var expandIcon = '<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>';
+var collapseIcon = '<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>';
+
+function setFsIcon(isFs) {
+  fsIcon.innerHTML = isFs ? collapseIcon : expandIcon;
+}
+
+function toggleFS() {
+  if (!document.fullscreenElement) {
+    deck.requestFullscreen().catch(function() {
+      // Native API not available (some mobile browsers) — fall back to CSS class
+      deck.classList.add('fullscreen');
+      setFsIcon(true);
+    });
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+document.addEventListener('fullscreenchange', function() {
+  var isFs = !!document.fullscreenElement;
+  deck.classList.toggle('fullscreen', isFs);
+  setFsIcon(isFs);
+});
+
 document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
   if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+  if (e.key === 'f' || e.key === 'F') toggleFS();
 });
-
-buildDots();
 
 // Wrap each slide's children in a centered .slide-inner div
 document.querySelectorAll('.slide').forEach(function(slide) {
