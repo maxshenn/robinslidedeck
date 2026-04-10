@@ -256,25 +256,37 @@ body{background:#0f0f1a;margin:0;padding:0;display:flex;flex-direction:column;}
     <div class="corner"></div><div class="corner2"></div>
     <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;flex:1;">
       <svg class="robin-svg" style="margin-bottom:16px;" viewBox="0 0 100 100" fill="none">
-        <!-- outer circle — transparent fill -->
-        <circle cx="50" cy="50" r="47" stroke="#0070d2" stroke-width="2" class="a1"/>
-        <!-- head -->
-        <path d="M34 32 Q34 13 50 13 Q66 13 66 32 Q66 46 50 48 Q34 46 34 32Z" stroke="#0070d2" stroke-width="1.8" class="a2"/>
+        <defs>
+          <filter id="neon" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="neonStrong" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="3.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- dark background circle -->
+        <circle cx="50" cy="50" r="47" fill="#0b0b18"/>
+        <!-- glowing outer ring -->
+        <circle cx="50" cy="50" r="47" stroke="#7ecfff" stroke-width="2.5" filter="url(#neon)" class="a1"/>
+        <!-- head silhouette -->
+        <path d="M35 35 Q35 15 50 13 Q65 15 65 35 Q65 49 50 51 Q35 49 35 35Z" fill="#0b0b18" stroke="#c5e8ff" stroke-width="1.5" filter="url(#neon)" class="a2"/>
         <!-- swept hair spike -->
-        <path d="M36 17 Q28 4 38 13" stroke="#0070d2" stroke-width="2.2" stroke-linecap="round" class="a2"/>
-        <!-- domino mask: angular eye shapes with pointed outer corners -->
-        <path d="M46 33 L35 33 L31 24 L37 21 L43 28 L47 27 L50 28.5 L53 27 L57 28 L63 21 L69 24 L65 33 L54 33 L50 31 Z" stroke="#0070d2" stroke-width="1.5" class="a2"/>
-        <!-- neck lines -->
-        <line x1="44" y1="48" x2="42" y2="55" stroke="#0070d2" stroke-width="1.8" stroke-linecap="round" class="a3"/>
-        <line x1="56" y1="48" x2="58" y2="55" stroke="#0070d2" stroke-width="1.8" stroke-linecap="round" class="a3"/>
-        <!-- shoulders and body -->
-        <path d="M42 55 L36 52 Q24 57 20 80 L80 80 Q76 57 64 52 L58 55" stroke="#0070d2" stroke-width="1.8" class="a3"/>
+        <path d="M54 14 Q63 2 65 12 Q61 6 58 14" fill="#0b0b18" stroke="#c5e8ff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" filter="url(#neon)" class="a2"/>
+        <!-- glowing eye slits (angular diamond shapes) -->
+        <path d="M33 33 L39 26 L45 32 L39 37Z" fill="#a8dcff" filter="url(#neonStrong)" class="a2"/>
+        <path d="M55 32 L61 26 L67 33 L61 37Z" fill="#a8dcff" filter="url(#neonStrong)" class="a2"/>
+        <!-- body and shoulders -->
+        <path d="M38 51 L29 56 Q18 62 16 84 L84 84 Q82 62 71 56 L62 51" fill="#0b0b18" stroke="#c5e8ff" stroke-width="1.5" filter="url(#neon)" class="a3"/>
         <!-- V collar -->
-        <path d="M42 55 L50 66 L58 55" stroke="#0070d2" stroke-width="1.8" stroke-linejoin="round" class="a3"/>
-        <!-- R emblem circle -->
-        <circle cx="50" cy="70" r="7" stroke="#0070d2" stroke-width="1.5" class="a4"/>
-        <!-- R letter -->
-        <path d="M47.5 67 L47.5 73 M47.5 67 L51.5 67 Q54 67 54 69.5 Q54 72 51.5 72 L47.5 72 M51.5 72 L54.5 73" stroke="#0070d2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="a4"/>
+        <path d="M38 51 L50 65 L62 51" fill="#0b0b18" stroke="#c5e8ff" stroke-width="1.8" stroke-linejoin="round" filter="url(#neon)" class="a3"/>
+        <!-- ≡ three lines -->
+        <line x1="36" y1="72" x2="44" y2="72" stroke="#a8dcff" stroke-width="2" stroke-linecap="round" filter="url(#neon)" class="a4"/>
+        <line x1="36" y1="76" x2="44" y2="76" stroke="#a8dcff" stroke-width="2" stroke-linecap="round" filter="url(#neon)" class="a4"/>
+        <line x1="36" y1="80" x2="44" y2="80" stroke="#a8dcff" stroke-width="2" stroke-linecap="round" filter="url(#neon)" class="a4"/>
+        <!-- R -->
+        <path d="M47 69.5 L47 81.5 M47 69.5 L52 69.5 Q55.5 69.5 55.5 73.5 Q55.5 77 52 77 L47 77 M52 77 L56 81.5" stroke="#a8dcff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon)" class="a4"/>
       </svg>
       <div class="h1 a1">Robin <span class="bl">by Salesforce</span></div>
       <div class="sub a2" style="text-align:center;max-width:560px;">Stop switching tabs — Robin already knows</div>
