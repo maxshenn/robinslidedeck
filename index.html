@@ -132,9 +132,10 @@ body{background:#0f0f1a;margin:0;padding:0;display:flex;flex-direction:column;}
 .cc-tag{font-size:clamp(8px,0.7vw,10px);padding:2px 7px;border-radius:100px;font-weight:500;}
 .cct-gray{background:#f3f4f6;color:#6b7280;}
 .cct-red{background:#fef2f2;color:#dc2626;}
-.cc-item{font-size:clamp(9px,0.85vw,12px);color:#6b7280;padding:3px 0;border-bottom:1px solid #f9fafb;display:flex;align-items:center;gap:5px;}
+.cc-item{font-size:clamp(9px,0.85vw,12px);color:#6b7280;padding:3px 0;border-bottom:1px solid #f9fafb;display:flex;align-items:flex-start;gap:5px;text-align:left;}
+.cc-dot{width:4px;height:4px;border-radius:50%;background:#dc2626;flex-shrink:0;margin-top:0.45em;}
 .cc-item:last-child{border:none;}
-.cc-dot{width:4px;height:4px;border-radius:50%;background:#dc2626;flex-shrink:0;}
+
 .cc-dot.bl{background:#0070d2;}
 
 .aud-stat{background:#f9fafb;border-radius:10px;padding:16px;text-align:center;border:1px solid #e5e7eb;}
@@ -310,7 +311,7 @@ body{background:#0f0f1a;margin:0;padding:0;display:flex;flex-direction:column;}
       </div>
       <div class="comp-card sc2">
         <div class="cc-name">Data Warehouses</div>
-        <div class="cc-item"><div class="cc-dot"></div>This method forces companies to extract, duplicate, and store massive amounts of data.</div>
+        <div class="cc-item"><div class="cc-dot"></div>Forces companies to extract, duplicate, and store a massive amount of data.</div>
       </div>
       <div class="comp-card sc3">
         <div class="cc-name">Consumer Data Platforms</div>
