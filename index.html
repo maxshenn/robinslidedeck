@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robin by Salesforce</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideLeft{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-32px)}to{opacity:1;transform:translateX(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.92)}to{opacity:1;transform:scale(1)}}
+@keyframes countUp{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+@keyframes lineGrow{from{width:0}to{width:100%}}
+@keyframes dotPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:0.7}}
+
+.a1{animation:fadeUp 0.5s ease both}
+.a2{animation:fadeUp 0.5s 0.15s ease both}
+.a3{animation:fadeUp 0.5s 0.3s ease both}
+.a4{animation:fadeUp 0.5s 0.45s ease both}
+.a5{animation:fadeUp 0.5s 0.6s ease both}
+.a6{animation:fadeUp 0.5s 0.75s ease both}
+.al1{animation:slideLeft 0.5s ease both}
+.al2{animation:slideLeft 0.5s 0.15s ease both}
+.al3{animation:slideLeft 0.5s 0.3s ease both}
+.al4{animation:slideLeft 0.5s 0.45s ease both}
+.ar1{animation:slideRight 0.5s ease both}
+.ar2{animation:slideRight 0.5s 0.15s ease both}
+.sc1{animation:scaleIn 0.5s ease both}
+.sc2{animation:scaleIn 0.5s 0.2s ease both}
+.sc3{animation:scaleIn 0.5s 0.4s ease both}
+.sc4{animation:scaleIn 0.5s 0.6s ease both}
+.cu1{animation:countUp 0.6s cubic-bezier(0.34,1.56,0.64,1) both}
+.cu2{animation:countUp 0.6s 0.2s cubic-bezier(0.34,1.56,0.64,1) both}
+.cu3{animation:countUp 0.6s 0.4s cubic-bezier(0.34,1.56,0.64,1) both}
+.fi1{animation:fadeIn 0.4s ease both}
+.fi2{animation:fadeIn 0.4s 0.2s ease both}
+.fi3{animation:fadeIn 0.4s 0.4s ease both}
+.fi4{animation:fadeIn 0.4s 0.6s ease both}
+.fi5{animation:fadeIn 0.4s 0.8s ease both}
+.fi6{animation:fadeIn 0.4s 1.0s ease both}
+
+html,body{height:100%;overflow:hidden;}
+body{background:#0f0f1a;margin:0;padding:0;display:flex;flex-direction:column;}
+
+.deck{font-family:'Inter',sans-serif;background:#e8eaed;display:flex;flex-direction:column;width:100%;height:100vh;border-radius:0;border:none;box-shadow:none;overflow:hidden;}
+
+.nav{background:#fff;border-bottom:1px solid #e5e7eb;padding:10px 16px;display:flex;align-items:center;gap:8px;}
+.nav-title{font-size:11px;font-weight:600;color:#374151;letter-spacing:0.05em;}
+.slide-num{font-size:10px;color:#9ca3af;margin-left:4px;}
+.dot-row{display:flex;gap:4px;flex:1;overflow:hidden;}
+.dot{width:5px;height:5px;border-radius:50%;background:#e5e7eb;cursor:pointer;transition:all 0.2s;flex-shrink:0;}
+.dot.on{background:#0070d2;width:14px;border-radius:3px;}
+.dot:hover{background:#9ca3af;}
+.nb{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid #e5e7eb;background:#fff;color:#6b7280;transition:all 0.15s;font-family:'Inter',sans-serif;}
+.nb:hover{background:#f9fafb;border-color:#d1d5db;}
+.nb.pr{background:#0070d2;border-color:#0070d2;color:#fff;}
+.nb.pr:hover{background:#005fb2;}
+
+.slide{display:none;background:#fff;flex:1;padding:48px 56px;flex-direction:column;position:relative;overflow-y:auto;}
+.slide.on{display:flex;}
+
+.corner{position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(ellipse at top right,rgba(0,112,210,0.06) 0%,transparent 70%);pointer-events:none;}
+.corner2{position:absolute;bottom:0;left:0;width:160px;height:160px;background:radial-gradient(ellipse at bottom left,rgba(0,112,210,0.04) 0%,transparent 70%);pointer-events:none;}
+.slide-tag{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#0070d2;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.tag-line{height:1px;width:32px;background:#0070d2;}
+.h1{font-size:40px;font-weight:800;color:#0f0f1a;letter-spacing:-0.03em;line-height:1.15;}
+.h1 .bl{color:#0070d2;}
+.h1 .gr{color:#9ca3af;}
+.sub{font-size:14px;color:#6b7280;line-height:1.7;margin-top:10px;max-width:600px;}
+.divider{height:1px;background:linear-gradient(90deg,#e5e7eb 0%,transparent 100%);margin:20px 0;}
+
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px 20px;}
+.card.blue{border-color:#b5d4f4;background:#f0f7ff;}
+.card.red{border-color:#fca5a5;background:#fef2f2;}
+.card.green{border-color:#86efac;background:#f0fdf4;}
+.card.amber{border-color:#fcd34d;background:#fffbeb;}
+.card-tag{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;}
+.card-tag.bl{color:#0070d2;}
+.card-tag.rd{color:#dc2626;}
+.card-h{font-size:18px;font-weight:700;color:#0f0f1a;margin-bottom:6px;line-height:1.3;}
+.card-h.bl{color:#0070d2;}
+.card-b{font-size:12px;color:#6b7280;line-height:1.6;}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.four{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.six{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+
+.big-num{font-size:100px;font-weight:900;color:#0070d2;letter-spacing:-0.05em;line-height:1;text-align:center;}
+.big-lbl{font-size:16px;font-weight:500;color:#374151;text-align:center;margin-top:6px;}
+.big-src{font-size:11px;color:#9ca3af;text-align:center;margin-top:4px;}
+
+.app-wrap{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px;}
+.ap{padding:5px 14px;border-radius:100px;font-size:11px;font-weight:500;border:1px solid #e5e7eb;color:#6b7280;background:#f9fafb;}
+.ap.dead{border-color:#fca5a5;color:#dc2626;background:#fef2f2;text-decoration:line-through;}
+
+.stat-row{display:flex;gap:1px;background:#f3f4f6;border-radius:10px;overflow:hidden;margin-top:14px;}
+.stat-cell{flex:1;background:#fff;padding:12px;text-align:center;}
+.sv{font-size:20px;font-weight:800;color:#0070d2;margin-bottom:2px;}
+.sv.dk{color:#0f0f1a;}
+.sl{font-size:10px;color:#9ca3af;line-height:1.4;}
+
+.pain-icon{width:44px;height:44px;border-radius:10px;background:#e6f1fb;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.pain-icon svg{width:22px;height:22px;}
+.pain-title{font-size:14px;font-weight:700;color:#0f0f1a;margin-bottom:6px;}
+.pain-body{font-size:11px;color:#6b7280;line-height:1.6;}
+
+.comp-card{border:1px solid #e5e7eb;border-radius:10px;padding:16px;}
+.cc-name{font-size:13px;font-weight:700;color:#0f0f1a;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.cc-tag{font-size:9px;padding:2px 7px;border-radius:100px;font-weight:500;}
+.cct-gray{background:#f3f4f6;color:#6b7280;}
+.cct-red{background:#fef2f2;color:#dc2626;}
+.cc-item{font-size:11px;color:#6b7280;padding:3px 0;border-bottom:1px solid #f9fafb;display:flex;align-items:center;gap:5px;}
+.cc-item:last-child{border:none;}
+.cc-dot{width:4px;height:4px;border-radius:50%;background:#dc2626;flex-shrink:0;}
+.cc-dot.bl{background:#0070d2;}
+
+.aud-stat{background:#f9fafb;border-radius:10px;padding:16px;text-align:center;border:1px solid #e5e7eb;}
+.as-val{font-size:28px;font-weight:800;color:#0070d2;margin-bottom:4px;}
+.as-lbl{font-size:11px;color:#9ca3af;line-height:1.5;}
+
+.how-num{font-size:10px;font-weight:700;color:#0070d2;letter-spacing:0.08em;margin-bottom:4px;}
+.how-h{font-size:14px;font-weight:700;color:#0f0f1a;margin-bottom:6px;}
+.how-b{font-size:11px;color:#9ca3af;line-height:1.6;}
+.how-icon{width:40px;height:40px;border-radius:10px;background:#e6f1fb;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.how-icon svg{width:20px;height:20px;}
+
+.mock-wrap{border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-top:16px;}
+.mock-bar{background:#f9fafb;border-bottom:1px solid #e5e7eb;padding:7px 12px;display:flex;align-items:center;gap:4px;}
+.mbd{width:7px;height:7px;border-radius:50%;}
+.mock-cols{display:grid;grid-template-columns:1fr 172px;}
+.mock-email{padding:12px;border-right:1px solid #e5e7eb;}
+.me-from{font-size:10px;font-weight:600;color:#374151;margin-bottom:3px;}
+.me-sub{font-size:12px;font-weight:600;color:#0f0f1a;margin-bottom:5px;}
+.me-body{font-size:10px;color:#9ca3af;line-height:1.5;}
+.mock-panel{padding:10px;background:#f0f7ff;}
+.mp-hd{font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#0070d2;margin-bottom:6px;display:flex;align-items:center;gap:3px;}
+.mpd{width:5px;height:5px;border-radius:50%;background:#0070d2;animation:dotPulse 2s infinite;}
+.mp-sig{font-size:9px;color:#374151;padding:3px 0;border-bottom:1px solid #dbeafe;}
+.mp-sig:last-child{border:none;}
+.mp-src{font-size:8px;color:#9ca3af;}
+.mp-risk{font-size:10px;font-weight:700;color:#dc2626;margin-top:6px;}
+
+.journey-col{flex:1;}
+.jc-head{font-size:14px;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid;}
+.jc-head.bad{color:#dc2626;border-color:#fca5a5;}
+.jc-head.good{color:#16a34a;border-color:#86efac;}
+.jc-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #f3f4f6;}
+.jc-row:last-child{border:none;}
+.jc-time{font-size:11px;font-weight:600;color:#374151;min-width:36px;}
+.jc-text{font-size:11px;color:#6b7280;line-height:1.4;}
+.jc-text.bad{color:#dc2626;}
+.jc-text.good{color:#16a34a;}
+.jc-total{font-size:22px;font-weight:800;margin-top:14px;padding-top:14px;border-top:2px solid;}
+.jc-total.bad{color:#dc2626;border-color:#fca5a5;}
+.jc-total.good{color:#16a34a;border-color:#86efac;}
+.journey-divider{width:1px;background:#e5e7eb;margin:0 20px;}
+
+.kpi-card{border:1px solid #e5e7eb;border-radius:10px;padding:16px;text-align:center;}
+.kpi-val{font-size:26px;font-weight:800;color:#0070d2;margin-bottom:4px;}
+.kpi-lbl{font-size:11px;color:#6b7280;line-height:1.5;}
+
+.impl-card{border:1px solid #e5e7eb;border-radius:10px;padding:18px;}
+.impl-logo{width:40px;height:40px;border-radius:8px;background:#0070d2;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.impl-logo svg{width:20px;height:20px;fill:#fff;}
+.impl-h{font-size:14px;font-weight:700;color:#0f0f1a;margin-bottom:6px;}
+.impl-b{font-size:11px;color:#9ca3af;line-height:1.6;}
+.impl-tag{font-size:9px;font-weight:600;padding:2px 8px;border-radius:100px;background:#e6f1fb;color:#0070d2;margin-top:8px;display:inline-block;}
+
+.feas-row{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid #f3f4f6;}
+.feas-row:last-child{border:none;}
+.feas-num{width:28px;height:28px;border-radius:50%;background:#0070d2;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px;}
+.feas-h{font-size:13px;font-weight:600;color:#0f0f1a;margin-bottom:3px;}
+.feas-b{font-size:12px;color:#6b7280;line-height:1.5;}
+
+.roi-big{text-align:center;padding:24px;background:#f0f7ff;border-radius:12px;border:1px solid #b5d4f4;margin-bottom:14px;}
+.roi-val{font-size:52px;font-weight:900;color:#0070d2;letter-spacing:-0.03em;line-height:1;}
+.roi-lbl{font-size:14px;color:#374151;font-weight:500;margin-top:6px;}
+
+.closing-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,112,210,0.05) 0%,transparent 70%);pointer-events:none;}
+.robin-svg{width:56px;height:56px;margin-bottom:20px;}
+.closing-h{font-size:48px;font-weight:800;color:#0f0f1a;letter-spacing:-0.03em;line-height:1.15;text-align:center;}
+.closing-h .bl{color:#0070d2;}
+.closing-sub{font-size:16px;color:#6b7280;text-align:center;margin-top:10px;}
+.closing-chips{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap;justify-content:center;}
+.chip{padding:8px 16px;border-radius:100px;border:1px solid #e5e7eb;font-size:11px;color:#6b7280;background:#f9fafb;}
+.chip strong{color:#0f0f1a;}
+.closing-tag{margin-top:24px;font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#0070d2;}
+
+.price-t{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9ca3af;margin-bottom:6px;}
+.price-v{font-size:32px;font-weight:800;color:#0f0f1a;margin-bottom:2px;}
+.price-v span{font-size:12px;font-weight:400;color:#9ca3af;}
+.price-d{font-size:11px;color:#9ca3af;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f3f4f6;}
+.pf{font-size:11px;color:#374151;padding:3px 0;display:flex;align-items:center;gap:5px;border-bottom:1px solid #f9fafb;}
+.pf:last-child{border:none;}
+.pf-dot{width:4px;height:4px;border-radius:50%;background:#0070d2;flex-shrink:0;}
+.pop{font-size:9px;padding:2px 8px;border-radius:100px;background:#0070d2;color:#fff;font-weight:600;display:inline-block;margin-bottom:6px;}
+
+.ind-n{font-size:12px;font-weight:700;color:#0f0f1a;margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+.ind-b{font-size:9px;padding:2px 6px;border-radius:100px;font-weight:500;}
+.ib1{background:#fef3c7;color:#92400e;}
+.ib2{background:#dbeafe;color:#1e40af;}
+.ib3{background:#dcfce7;color:#166534;}
+.ib4{background:#f3e8ff;color:#7e22ce;}
+.ind-p{font-size:10px;color:#9ca3af;margin-bottom:5px;}
+.ind-s{font-size:10px;font-style:italic;color:#374151;margin-bottom:7px;line-height:1.4;}
+.risk{font-size:9px;font-weight:600;padding:2px 8px;border-radius:100px;display:inline-block;}
+.rr{background:#fef2f2;color:#dc2626;}
+.ra{background:#fffbeb;color:#d97706;}
+
+.alert{padding:10px 14px;border-radius:0 8px 8px 0;border-left:3px solid #dc2626;background:#fef2f2;margin-top:14px;}
+.alert-t{font-size:11px;color:#dc2626;font-weight:500;line-height:1.5;}
+  </style>
+</head>
+<body>
+
+<div class="deck">
+  <div class="nav">
+    <span class="nav-title">Robin by Salesforce</span>
+    <span class="slide-num" id="sc">01 / 14</span>
+    <div class="dot-row" id="drow"></div>
+    <button class="nb" onclick="prev()">&#8592;</button>
+    <button class="nb pr" onclick="next()">&#8594;</button>
+  </div>
+
+  <div class="slide on" id="s0">
+    <div class="corner"></div><div class="corner2"></div>
+    <svg class="robin-svg" style="margin-bottom:16px;" viewBox="0 0 56 56" fill="none">
+      <circle cx="28" cy="28" r="26" fill="#e6f1fb" stroke="#0070d2" stroke-width="1.5" class="a1"/>
+      <path fill="#0070d2" d="M16 34s2-10 12-10 12 5 12 5l-5 3s-2-4-7-4-8 6-8 6z" class="a2"/>
+      <path fill="#0070d2" d="M28 24s0-5 5-8c2-1.2 6-1.5 6-1.5s-1.5 4-4 7-7 2.5-7 2.5z" class="a3"/>
+      <circle fill="#0070d2" cx="35" cy="20" r="2" class="a4"/>
+    </svg>
+    <div class="h1 a1">Robin <span class="bl">by Salesforce</span></div>
+    <div class="sub a2">The unified decision intelligence layer for mid-market companies</div>
+    <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;" class="a3">
+      <span style="font-size:10px;padding:4px 12px;border-radius:100px;border:1px solid #b5d4f4;color:#0070d2;background:#f0f7ff;">Mid-Market</span>
+      <span style="font-size:10px;padding:4px 12px;border-radius:100px;border:1px solid #b5d4f4;color:#0070d2;background:#f0f7ff;">AI-Native</span>
+      <span style="font-size:10px;padding:4px 12px;border-radius:100px;border:1px solid #b5d4f4;color:#0070d2;background:#f0f7ff;">Invisible Infrastructure</span>
+    </div>
+    <div style="font-size:11px;color:#9ca3af;display:flex;align-items:center;gap:6px;margin-top:20px;" class="a4">
+      <div style="width:7px;height:7px;border-radius:50%;background:#0070d2;"></div>
+      Built on Salesforce Data Cloud + Agentforce + MuleSoft
+    </div>
+  </div>
+
+  <div class="slide" id="s1">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>Problem</div>
+    <div class="h1 a2">Mid-market companies run on<br><span class="bl">6&#8211;10 disconnected platforms.</span></div>
+    <div class="sub a3">Every time an employee needs to make a decision about a customer, they have to manually piece together information from all of them.</div>
+    <div class="big-num cu1" style="margin-top:16px;">1,200</div>
+    <div class="big-lbl a4">app switches per day per employee</div>
+    <div class="big-src a5">Harvard Business Review, 2022</div>
+    <div class="app-wrap a5">
+      <span class="ap">Gmail</span><span class="ap dead">Salesforce</span><span class="ap">Shopify</span><span class="ap">Zendesk</span><span class="ap">QuickBooks</span><span class="ap">Slack</span><span class="ap">Stripe</span>
+    </div>
+  </div>
+
+  <div class="slide" id="s2">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>Pain Points</div>
+    <div class="h1 a2">Three compounding costs<br><span class="bl">of fragmentation</span></div>
+    <div class="three" style="margin-top:24px;">
+      <div class="card sc1">
+        <div class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0070d2" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="pain-title">Context switching</div>
+        <div class="pain-body">40% of productive time lost to switching between disconnected platforms. 23 minutes to regain focus after each interruption.</div>
+      </div>
+      <div class="card sc2">
+        <div class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0070d2" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+        <div class="pain-title">Missed signals</div>
+        <div class="pain-body">Churn signals, default risks, and disengagement patterns buried across 5 platforms. By the time someone sees them, it is too late.</div>
+      </div>
+      <div class="card sc3">
+        <div class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0070d2" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="pain-title">Damaged relationships</div>
+        <div class="pain-body">Decisions made on incomplete information. Customers, borrowers, and clients lost because nobody connected the dots in time.</div>
+      </div>
+    </div>
+    <div class="stat-row a5">
+      <div class="stat-cell"><div class="sv">40%</div><div class="sl">productive time lost</div></div>
+      <div class="stat-cell"><div class="sv">23 min</div><div class="sl">lost per interruption</div></div>
+      <div class="stat-cell"><div class="sv">$450B</div><div class="sl">US economy annual loss</div></div>
+      <div class="stat-cell"><div class="sv dk">10 IQ</div><div class="sl">pts drop from multitasking</div></div>
+    </div>
+  </div>
+
+  <div class="slide" id="s3">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>Current Initiatives</div>
+    <div class="h1 a2">Current solutions only solve<br><span class="bl">part of the problem.</span></div>
+    <div class="three" style="margin-top:22px;">
+      <div class="comp-card sc1">
+        <div class="cc-name">Salesforce CRM <span class="cc-tag cct-gray">Incumbent</span></div>
+        <div class="cc-item"><div class="cc-dot"></div>Requires dedicated admin</div>
+        <div class="cc-item"><div class="cc-dot"></div>Months of implementation</div>
+        <div class="cc-item"><div class="cc-dot"></div>Enterprise pricing</div>
+        <div class="cc-item"><div class="cc-dot"></div>Dashboard nobody opens</div>
+      </div>
+      <div class="comp-card sc2">
+        <div class="cc-name">HubSpot / Intercom <span class="cc-tag cct-gray">Competitor</span></div>
+        <div class="cc-item"><div class="cc-dot"></div>Built for SMBs</div>
+        <div class="cc-item"><div class="cc-dot"></div>Lacks mid-market depth</div>
+        <div class="cc-item"><div class="cc-dot"></div>No compliance layer</div>
+        <div class="cc-item"><div class="cc-dot"></div>Single-tool view only</div>
+      </div>
+      <div class="comp-card sc3">
+        <div class="cc-name">Custom AI Stacks <span class="cc-tag cct-red">Threat</span></div>
+        <div class="cc-item"><div class="cc-dot"></div>Expensive engineering teams</div>
+        <div class="cc-item"><div class="cc-dot"></div>No governance framework</div>
+        <div class="cc-item"><div class="cc-dot"></div>No compliance audit trail</div>
+        <div class="cc-item"><div class="cc-dot"></div>Months to build</div>
+      </div>
+    </div>
+    <div class="alert a5">
+      <div class="alert-t">None of them unify data where work actually happens &#8212; inside Gmail, Slack, Zendesk, and the other tools mid-market teams use every day.</div>
+    </div>
+  </div>
+
+  <div class="slide" id="s4">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>Target Audience</div>
+    <div class="h1 a2">Mid-market companies.<br><span class="bl">Growing fast. Flying blind.</span></div>
+    <div class="sub a3">Large enough to have meaningful data. Too small to have a data engineering team. Too fast-growing to afford fragmentation.</div>
+    <div class="six" style="margin-top:22px;">
+      <div class="aud-stat sc1"><div class="as-val">50&#8211;500</div><div class="as-lbl">employees</div></div>
+      <div class="aud-stat sc2"><div class="as-val">$10M&#8211;$250M</div><div class="as-lbl">annual revenue</div></div>
+      <div class="aud-stat sc3"><div class="as-val">6&#8211;10</div><div class="as-lbl">disconnected platforms</div></div>
+      <div class="aud-stat sc4"><div class="as-val">0</div><div class="as-lbl">data engineering team</div></div>
+      <div class="aud-stat" style="animation:scaleIn 0.5s 0.8s ease both;"><div class="as-val">High</div><div class="as-lbl">growth pressure</div></div>
+      <div class="aud-stat" style="animation:scaleIn 0.5s 1s ease both;"><div class="as-val">49%</div><div class="as-lbl">of Salesforce customers</div></div>
+    </div>
+    <div class="card blue a5" style="margin-top:14px;padding:12px 16px;">
+      <div class="card-b" style="font-size:12px;color:#0070d2;font-weight:500;">Einstein AI, Agentforce, and Data Cloud require data volume and analytical depth that mid-market companies have &#8212; but have never been able to unify. Robin is the missing layer.</div>
+    </div>
+  </div>
+
+  <div class="slide" id="s5">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>Solution</div>
+    <div class="h1 a2">Introducing <span class="bl">Robin.</span></div>
+    <div class="sub a3">Robin sits invisibly inside the tools your team already uses and automatically assembles the right context &#8212; at the exact moment a decision needs to be made. No new dashboard. No behavior change.</div>
+    <div class="mock-wrap a4">
+      <div class="mock-bar">
+        <div class="mbd" style="background:#fca5a5;"></div>
+        <div class="mbd" style="background:#fcd34d;margin-left:3px;"></div>
+        <div class="mbd" style="background:#86efac;margin-left:3px;"></div>
+        <span style="font-size:10px;color:#9ca3af;margin-left:8px;">Gmail &#8212; Inbox</span>
+        <span style="font-size:9px;padding:2px 8px;border-radius:100px;background:#e6f1fb;color:#0070d2;margin-left:auto;border:1px solid #b5d4f4;font-weight:500;">Robin active</span>
+      </div>
+      <div class="mock-cols">
+        <div class="mock-email">
+          <div class="me-from">Alex Reyes &#8212; alex@summitlogistics.com &#8212; 9:14 am</div>
+          <div class="me-sub">Re: Q3 contract renewal &#8212; urgent follow-up needed</div>
+          <div class="me-body">Hi, I've sent two emails about our contract renewal and haven't heard back. We've been a client for 3 years and need a resolution before our board meeting on Friday. Please escalate this immediately.</div>
+        </div>
+        <div class="mock-panel">
+          <div class="mp-hd"><div class="mpd"></div>Robin &#8212; live</div>
+          <div class="mp-sig">3yr client &#183; $180k annual contract<div class="mp-src">CRM + Billing</div></div>
+          <div class="mp-sig">2 emails unanswered &#8212; 8 days<div class="mp-src">Gmail</div></div>
+          <div class="mp-sig">Renewal window closes in 6 days<div class="mp-src">Contracts</div></div>
+          <div class="mp-sig">Last meeting &#8212; 47 days ago<div class="mp-src">Calendar</div></div>
+          <div class="mp-risk">High churn risk &#183; Act now</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="s6">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>Breakdown</div>
+    <div class="h1 a2">Three steps.<br><span class="bl">Zero behavior change.</span></div>
+    <div class="three" style="margin-top:24px;">
+      <div class="card sc1">
+        <div class="how-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0070d2" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="how-num">01 &#8212; Connect</div>
+        <div class="how-h">Link your existing tools</div>
+        <div class="how-b">One-click OAuth to every platform. Under 10 minutes. No migration. No training. No new interface.</div>
+      </div>
+      <div class="card blue sc2">
+        <div class="how-icon" style="background:#0070d2;"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg></div>
+        <div class="how-num">02 &#8212; Unify</div>
+        <div class="how-h">Every signal. One record.</div>
+        <div class="how-b">Robin assembles a complete picture from every connected platform in real time. Zero manual data entry. Ever.</div>
+      </div>
+      <div class="card sc3">
+        <div class="how-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0070d2" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="how-num">03 &#8212; Surface</div>
+        <div class="how-h">Right place. Right moment.</div>
+        <div class="how-b">Complete context appears automatically inside Gmail, Slack, Zendesk &#8212; wherever the decision is being made.</div>
+      </div>
+    </div>
+    <div class="stat-row a5">
+      <div class="stat-cell"><div class="sv dk">8 min</div><div class="sl">manual assembly before Robin</div></div>
+      <div class="stat-cell"><div class="sv">60 sec</div><div class="sl">with Robin &#8212; fully automated</div></div>
+      <div class="stat-cell"><div class="sv">0</div><div class="sl">manual data entries required</div></div>
+    </div>
+  </div>
+
+  <div class="slide" id="s7">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>Demo</div>
+    <div class="h1 a2">See Robin<br><span class="bl">in action.</span></div>
+    <div class="sub a3">Watch how Robin surfaces a complete customer record automatically &#8212; across four different industries &#8212; without a single tab switch.</div>
+    <div class="two" style="margin-top:24px;">
+      <div class="card blue al1" style="padding:24px;">
+        <div class="card-tag bl">Live demonstration</div>
+        <div class="card-h bl" style="font-size:22px;">robin.salesforce.com</div>
+        <div class="card-b" style="margin-top:8px;">Interactive prototype showing the full workflow across Retail, Financial Services, Healthcare, and Professional Services.</div>
+      </div>
+      <div class="card al2" style="padding:20px;">
+        <div class="card-tag">What you will see</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+          <div style="font-size:12px;color:#374151;display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#0070d2;flex-shrink:0;"></div>Auto-enrichment firing on first contact</div>
+          <div style="font-size:12px;color:#374151;display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#0070d2;flex-shrink:0;"></div>Cross-platform signals unified in real time</div>
+          <div style="font-size:12px;color:#374151;display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#0070d2;flex-shrink:0;"></div>AI draft reply generated automatically</div>
+          <div style="font-size:12px;color:#374151;display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#0070d2;flex-shrink:0;"></div>Action logged across all tools simultaneously</div>
+          <div style="font-size:12px;color:#374151;display:flex;align-items:center;gap:8px;"><div style="width:5px;height:5px;border-radius:50%;background:#0070d2;flex-shrink:0;"></div>Risk score recalculated after resolution</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="s8">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>User Journey</div>
+    <div class="h1 a2">This is <span class="bl">Alex.</span></div>
+    <div class="sub a3">He manages 100 client accounts at a mid-market logistics company. Let's see his day &#8212; without Robin, and with it.</div>
+    <div style="display:flex;margin-top:20px;" class="a4">
+      <div class="journey-col">
+        <div class="jc-head bad">Without Robin</div>
+        <div class="jc-row"><div class="jc-time">9:00</div><div class="jc-text">Opens email from client Alex Reyes</div></div>
+        <div class="jc-row"><div class="jc-time">9:02</div><div class="jc-text bad">Switches to Shopify &#8212; finds order history</div></div>
+        <div class="jc-row"><div class="jc-time">9:04</div><div class="jc-text bad">Switches to Zendesk &#8212; finds open ticket</div></div>
+        <div class="jc-row"><div class="jc-time">9:06</div><div class="jc-text bad">Switches to QuickBooks &#8212; checks invoices</div></div>
+        <div class="jc-row"><div class="jc-time">9:08</div><div class="jc-text">Writes reply from memory. Misses the ticket.</div></div>
+        <div class="jc-row"><div class="jc-time">9:11</div><div class="jc-text bad">Forgets to log the interaction in Salesforce</div></div>
+        <div class="jc-total bad">8 min wasted</div>
+      </div>
+      <div class="journey-divider"></div>
+      <div class="journey-col">
+        <div class="jc-head good">With Robin</div>
+        <div class="jc-row"><div class="jc-time">9:00</div><div class="jc-text">Opens email from client Alex Reyes</div></div>
+        <div class="jc-row"><div class="jc-time">9:00</div><div class="jc-text good">Robin panel loads &#8212; full record already there</div></div>
+        <div class="jc-row"><div class="jc-time">9:00</div><div class="jc-text good">Signals from 4 platforms already assembled</div></div>
+        <div class="jc-row"><div class="jc-time">9:00</div><div class="jc-text good">AI draft reply ready with one click</div></div>
+        <div class="jc-row"><div class="jc-time">9:01</div><div class="jc-text good">Reply sent. Context-aware. Personalized.</div></div>
+        <div class="jc-row"><div class="jc-time">9:01</div><div class="jc-text good">Automatically logged across all tools</div></div>
+        <div class="jc-total good">60 seconds. Done.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="s9">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>KPIs</div>
+    <div class="h1 a2">How we measure<br><span class="bl">success.</span></div>
+    <div class="six" style="margin-top:22px;">
+      <div class="kpi-card sc1"><div class="kpi-val">40%</div><div class="kpi-lbl">reduction in context switching within 90 days</div></div>
+      <div class="kpi-card sc2"><div class="kpi-val">25%</div><div class="kpi-lbl">improvement in customer retention within 6 months</div></div>
+      <div class="kpi-card sc3"><div class="kpi-val">80%+</div><div class="kpi-lbl">data completeness score within 30 days</div></div>
+      <div class="kpi-card sc4"><div class="kpi-val">100%</div><div class="kpi-lbl">of actions auto-logged &#8212; zero manual entry</div></div>
+      <div class="kpi-card" style="animation:scaleIn 0.5s 0.8s ease both;"><div class="kpi-val">6</div><div class="kpi-lbl">platforms connected on average per company</div></div>
+      <div class="kpi-card" style="animation:scaleIn 0.5s 1.0s ease both;"><div class="kpi-val">6 wks</div><div class="kpi-lbl">average time to full value</div></div>
+    </div>
+    <div class="four" style="margin-top:12px;">
+      <div class="card blue a5"><div class="card-tag bl">Industry coverage</div><div class="four" style="gap:6px;margin-top:4px;"><div class="ind-n" style="font-size:10px;">Retail <span class="ind-b ib1">E-comm</span></div><div class="ind-n" style="font-size:10px;">Finance <span class="ind-b ib2">Credit</span></div><div class="ind-n" style="font-size:10px;">Health <span class="ind-b ib3">Practice</span></div><div class="ind-n" style="font-size:10px;">Legal <span class="ind-b ib4">Services</span></div></div></div>
+      <div class="card a5"><div class="card-tag">Every vertical. Same engine.</div><div class="card-b">Same infrastructure. Different signals. Different risk language. Infinite surfaces.</div></div>
+    </div>
+  </div>
+
+  <div class="slide" id="s10">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>Implementation</div>
+    <div class="h1 a2">Built on what<br><span class="bl">Salesforce already owns.</span></div>
+    <div class="three" style="margin-top:22px;">
+      <div class="impl-card sc1">
+        <div class="impl-logo"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+        <div class="impl-h">Data Cloud</div>
+        <div class="impl-b">Unified customer records across every connected platform. Zero Copy architecture. Real-time data without migration.</div>
+        <div class="impl-tag">Already deployed</div>
+      </div>
+      <div class="impl-card sc2">
+        <div class="impl-logo"><svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg></div>
+        <div class="impl-h">MuleSoft</div>
+        <div class="impl-b">1,000+ pre-built connectors to every platform a mid-market company uses. One-click OAuth integration. No custom engineering.</div>
+        <div class="impl-tag">1,000+ connectors</div>
+      </div>
+      <div class="impl-card sc3">
+        <div class="impl-logo"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="impl-h">Agentforce</div>
+        <div class="impl-b">AI agents that turn unified intelligence into autonomous action. Draft replies, route tickets, update records &#8212; automatically.</div>
+        <div class="impl-tag">5,000 customers signed</div>
+      </div>
+    </div>
+    <div class="card blue a5" style="margin-top:14px;padding:12px 16px;">
+      <div class="card-b" style="font-size:12px;color:#0070d2;font-weight:500;">Robin is not a new product built from scratch. It is Salesforce's existing infrastructure finally packaged for the market that needs it most. No startup can replicate this in two years with venture money.</div>
+    </div>
+  </div>
+
+  <div class="slide" id="s11">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>Feasibility</div>
+    <div class="h1 a2">Why Robin works <span class="bl">now.</span></div>
+    <div style="margin-top:20px;">
+      <div class="feas-row a2">
+        <div class="feas-num">1</div>
+        <div><div class="feas-h">Infrastructure already exists</div><div class="feas-b">Data Cloud, MuleSoft, and Agentforce are already built, deployed, and generating revenue. Robin repackages them &#8212; it does not rebuild them.</div></div>
+      </div>
+      <div class="feas-row a3">
+        <div class="feas-num">2</div>
+        <div><div class="feas-h">Mid-market data density threshold is met</div><div class="feas-b">Companies with 50&#8211;500 employees generate enough interaction volume for Einstein AI to produce accurate predictions from day one. SMBs cannot say the same.</div></div>
+      </div>
+      <div class="feas-row a4">
+        <div class="feas-num">3</div>
+        <div><div class="feas-h">Compliance layer is already built</div><div class="feas-b">Salesforce's SOC 2, GDPR, and HIPAA infrastructure gives Robin immediate credibility in regulated industries &#8212; healthcare and financial services &#8212; that no startup can offer.</div></div>
+      </div>
+      <div class="feas-row a5">
+        <div class="feas-num">4</div>
+        <div><div class="feas-h">The market timing is right</div><div class="feas-b">Mid-market companies are actively evaluating their tool stacks right now. Gartner identified multiagent systems and domain-specific AI as top 2026 priorities. Robin is the answer to both.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="s12">
+    <div class="corner"></div><div class="corner2"></div>
+    <div class="slide-tag a1"><div class="tag-line"></div>Return on Investment</div>
+    <div class="h1 a2">The numbers<br><span class="bl">are not close.</span></div>
+    <div class="two" style="margin-top:20px;align-items:start;">
+      <div>
+        <div class="roi-big a3">
+          <div class="roi-val">$750,000</div>
+          <div class="roi-lbl">saved per year &#183; 100-person mid-market company</div>
+        </div>
+        <div class="stat-row a4">
+          <div class="stat-cell"><div class="sv dk">$35&#8211;75</div><div class="sl">per user per month</div></div>
+          <div class="stat-cell"><div class="sv">6 wks</div><div class="sl">to full value</div></div>
+          <div class="stat-cell"><div class="sv">15x</div><div class="sl">ROI in year one</div></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card a3">
+          <div class="card-tag">The math</div>
+          <div class="card-b" style="font-size:11px;line-height:1.8;color:#374151;">
+            100 employees &#215; 30 customer interactions/day<br>
+            &#215; 90 seconds context-switching each<br>
+            = 4,500 min/day = 75 hrs/day<br>
+            &#215; 250 working days &#215; $40/hr<br>
+            = <strong>$750,000/year</strong> in wasted salary
+          </div>
+        </div>
+        <div class="card blue a4">
+          <div class="card-tag bl">Robin annual cost</div>
+          <div class="card-b" style="font-size:11px;line-height:1.8;color:#0070d2;font-weight:500;">
+            100 users &#215; $75/month &#215; 12 months<br>
+            = $90,000/year<br><br>
+            Net gain year one: <strong>$660,000</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="s13">
+    <div class="closing-bg"></div>
+    <div class="corner"></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+      <svg style="width:52px;height:52px;margin-bottom:20px;" viewBox="0 0 52 52" fill="none" class="sc1">
+        <circle cx="26" cy="26" r="24" fill="#e6f1fb" stroke="#0070d2" stroke-width="1.5"/>
+        <path fill="#0070d2" d="M14 32s2-9 12-9 12 4.5 12 4.5l-4.5 2.5s-2-4-7.5-4S18 33 18 33z"/>
+        <path fill="#0070d2" d="M26 23s0-5 5-7.5c2-1 6-1.5 6-1.5s-1.5 4-4 6.5c-2.5 2.5-7 2.5-7 2.5z"/>
+        <circle fill="#0070d2" cx="33" cy="19" r="1.8"/>
+      </svg>
+      <div class="closing-h a1">The data exists.<br>It always <span class="bl">existed.</span></div>
+      <div class="closing-sub a2">Robin puts it where it needs to be &#8212; invisibly, automatically, irreplaceably.</div>
+      <div class="closing-chips a3">
+        <div class="chip"><strong>1,200</strong> app switches per day</div>
+        <div class="chip"><strong>23 min</strong> lost per interruption</div>
+        <div class="chip"><strong>$750k</strong> wasted / 100-person team / year</div>
+        <div class="chip"><strong>15x</strong> ROI in year one</div>
+      </div>
+      <div class="closing-tag a4">Robin by Salesforce &#8212; Invisible. Indispensable.</div>
+      <div style="font-size:14px;font-weight:600;color:#0070d2;margin-top:16px;" class="a5">Thank you. Questions?</div>
+    </div>
+  </div>
+</div>
+
+<script>
+var cur = 0, tot = 14;
+var titles = ['Cover','Problem','Pain Points','Current Initiatives','Target Audience','Solution','Breakdown','Demo','User Journey','KPIs','Implementation','Feasibility','Return on Investment','Q&A'];
+
+function buildDots() {
+  var dr = document.getElementById('drow');
+  while (dr.firstChild) { dr.removeChild(dr.firstChild); }
+  for (var i = 0; i < tot; i++) {
+    var d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' on' : '');
+    d.title = titles[i];
+    (function(n) { d.onclick = function() { go(n); }; })(i);
+    dr.appendChild(d);
+  }
+}
+
+function go(n) {
+  var prev = document.getElementById('s' + cur);
+  prev.classList.remove('on');
+  prev.style.display = 'none';
+  cur = n;
+  var sl = document.getElementById('s' + cur);
+  sl.style.display = 'flex';
+  void sl.offsetWidth;
+  sl.classList.add('on');
+  var numStr = (cur + 1 < 10 ? '0' : '') + (cur + 1) + ' / ' + tot + ' \u2014 ' + titles[cur];
+  document.getElementById('sc').textContent = numStr;
+  document.querySelectorAll('.dot').forEach(function(d, i) { d.classList.toggle('on', i === cur); });
+}
+
+function next() { if (cur < tot - 1) go(cur + 1); }
+function prev() { if (cur > 0) go(cur - 1); }
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+});
+
+buildDots();
+</script>
+</body>
+</html>
