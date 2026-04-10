@@ -201,7 +201,7 @@ body{background:#0f0f1a;margin:0;padding:0;display:flex;flex-direction:column;}
 .roi-lbl{font-size:clamp(11px,1.1vw,15px);color:#374151;font-weight:500;margin-top:6px;}
 
 .closing-bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,112,210,0.05) 0%,transparent 70%);pointer-events:none;}
-.robin-svg{width:56px;height:56px;margin-bottom:20px;}
+.robin-svg{width:88px;height:88px;margin-bottom:20px;}
 .closing-h{font-size:clamp(48px,6.5vw,88px);font-weight:800;color:#0f0f1a;letter-spacing:-0.03em;line-height:1.15;text-align:center;}
 .closing-h .bl{color:#0070d2;}
 .closing-sub{font-size:clamp(18px,2vw,26px);color:#6b7280;text-align:center;margin-top:10px;}
@@ -255,11 +255,26 @@ body{background:#0f0f1a;margin:0;padding:0;display:flex;flex-direction:column;}
   <div class="slide on" id="s0">
     <div class="corner"></div><div class="corner2"></div>
     <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;flex:1;">
-      <svg class="robin-svg" style="margin-bottom:16px;" viewBox="0 0 56 56" fill="none">
-        <circle cx="28" cy="28" r="26" fill="#e6f1fb" stroke="#0070d2" stroke-width="1.5" class="a1"/>
-        <path fill="#0070d2" d="M16 34s2-10 12-10 12 5 12 5l-5 3s-2-4-7-4-8 6-8 6z" class="a2"/>
-        <path fill="#0070d2" d="M28 24s0-5 5-8c2-1.2 6-1.5 6-1.5s-1.5 4-4 7-7 2.5-7 2.5z" class="a3"/>
-        <circle fill="#0070d2" cx="35" cy="20" r="2" class="a4"/>
+      <svg class="robin-svg" style="margin-bottom:16px;" viewBox="0 0 100 100" fill="none">
+        <!-- outer circle — transparent fill -->
+        <circle cx="50" cy="50" r="47" stroke="#0070d2" stroke-width="2" class="a1"/>
+        <!-- head -->
+        <path d="M34 32 Q34 13 50 13 Q66 13 66 32 Q66 46 50 48 Q34 46 34 32Z" stroke="#0070d2" stroke-width="1.8" class="a2"/>
+        <!-- swept hair spike -->
+        <path d="M36 17 Q28 4 38 13" stroke="#0070d2" stroke-width="2.2" stroke-linecap="round" class="a2"/>
+        <!-- domino mask: angular eye shapes with pointed outer corners -->
+        <path d="M46 33 L35 33 L31 24 L37 21 L43 28 L47 27 L50 28.5 L53 27 L57 28 L63 21 L69 24 L65 33 L54 33 L50 31 Z" stroke="#0070d2" stroke-width="1.5" class="a2"/>
+        <!-- neck lines -->
+        <line x1="44" y1="48" x2="42" y2="55" stroke="#0070d2" stroke-width="1.8" stroke-linecap="round" class="a3"/>
+        <line x1="56" y1="48" x2="58" y2="55" stroke="#0070d2" stroke-width="1.8" stroke-linecap="round" class="a3"/>
+        <!-- shoulders and body -->
+        <path d="M42 55 L36 52 Q24 57 20 80 L80 80 Q76 57 64 52 L58 55" stroke="#0070d2" stroke-width="1.8" class="a3"/>
+        <!-- V collar -->
+        <path d="M42 55 L50 66 L58 55" stroke="#0070d2" stroke-width="1.8" stroke-linejoin="round" class="a3"/>
+        <!-- R emblem circle -->
+        <circle cx="50" cy="70" r="7" stroke="#0070d2" stroke-width="1.5" class="a4"/>
+        <!-- R letter -->
+        <path d="M47.5 67 L47.5 73 M47.5 67 L51.5 67 Q54 67 54 69.5 Q54 72 51.5 72 L47.5 72 M51.5 72 L54.5 73" stroke="#0070d2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="a4"/>
       </svg>
       <div class="h1 a1">Robin <span class="bl">by Salesforce</span></div>
       <div class="sub a2" style="text-align:center;max-width:560px;">Stop switching tabs — Robin already knows</div>
