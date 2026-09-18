@@ -72,7 +72,7 @@ body{background:#0f0f1a;margin:0;padding:0;display:flex;flex-direction:column;}
 /* Exit button shown only in fullscreen */
 .exit-fs{display:none;position:fixed;top:16px;right:16px;z-index:10000;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,0.2);background:rgba(0,0,0,0.45);color:#fff;font-family:'Inter',sans-serif;backdrop-filter:blur(6px);transition:opacity 0.2s;}
 .exit-fs:hover{background:rgba(0,0,0,0.65);}
-.deck.fullscreen ~ .exit-fs{display:block;}
+body.deck-fs .exit-fs{display:block;}
 
 /* Smooth transition in/out */
 .deck{transition:border-radius 0.25s ease;}
@@ -596,17 +596,65 @@ function setFsIcon(isFs) {
   fsIcon.innerHTML = isFs ? collapseIcon : expandIcon;
 }
 
+// When this deck is embedded in a page that offers to manage fullscreen (a phone, where the
+// Fullscreen API is missing or can't escape the iframe), the deck switches to its own
+// full-bleed layout and asks the host to take the frame full screen. Standalone, or on a
+// host that doesn't offer, it behaves exactly as before.
+var hostManagesFs = false;
+function tellHost(type, extra) {
+  if (window.parent === window) return;
+  var msg = { source: 'robin-deck', type: type };
+  if (extra) for (var k in extra) msg[k] = extra[k];
+  window.parent.postMessage(msg, '*');
+}
+function setHostedFs(on, fromHost) {
+  deck.classList.toggle('fullscreen', on);
+  setFsIcon(on);
+  if (!fromHost) tellHost('fullscreen', { on: on });
+}
+window.addEventListener('message', function(e) {
+  if (e.source !== window.parent || !e.data || e.data.source !== 'robin-host') return;
+  if (e.data.type === 'hello') { hostManagesFs = !!e.data.manageFullscreen; tellHost('ready'); }
+  if (e.data.type === 'enter-fullscreen') setHostedFs(true, true);
+  if (e.data.type === 'exit-fullscreen') setHostedFs(false, true);
+});
+tellHost('ready');
+
 function toggleFS() {
-  if (!document.fullscreenElement) {
+  if (hostManagesFs) { setHostedFs(!deck.classList.contains('fullscreen'), false); return; }
+  if (!document.fullscreenElement && !deck.classList.contains('fullscreen')) {
     deck.requestFullscreen().catch(function() {
       // Native API not available (some mobile browsers) — fall back to CSS class
       deck.classList.add('fullscreen');
+      document.body.classList.add('deck-fs');   // shows the Exit button (it sits outside .deck)
       setFsIcon(true);
     });
-  } else {
+  } else if (document.fullscreenElement) {
     document.exitFullscreen();
+  } else {
+    deck.classList.remove('fullscreen');   // leaving the CSS-class fallback
+    document.body.classList.remove('deck-fs');
+    setFsIcon(false);
   }
 }
+
+// Swipe to change slides: a mostly-horizontal drag of 40px+ moves one slide.
+// Vertical drags are left alone so tall slides still scroll.
+(function() {
+  var x0 = null, y0 = null, t0 = 0;
+  deck.addEventListener('touchstart', function(e) {
+    if (e.touches.length !== 1) { x0 = null; return; }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now();
+  }, { passive: true });
+  deck.addEventListener('touchend', function(e) {
+    if (x0 === null) return;
+    var t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.5 || Date.now() - t0 > 900) return;
+    if (dx < 0) next(); else prev();
+  }, { passive: true });
+  deck.addEventListener('touchcancel', function() { x0 = null; }, { passive: true });
+})();
 
 document.addEventListener('fullscreenchange', function() {
   var isFs = !!document.fullscreenElement;
